@@ -1,0 +1,3 @@
+# Paste 3-8 of your favourite tweets here, one per line (the funnier, the better).
+# The AI uses them as a quality bar for both writing and judging. It does NOT copy them.
+# Lines starting with # are ignored. Leave the file with only comments to use no examples.

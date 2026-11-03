@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TweetSmith - Generate Viral Tweets</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --secondary: #f59e0b;
+            --accent: #10b981;
+            --success: #059669;
+            --warning: #d97706;
+            --error: #dc2626;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #f1f5f9;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border: #e2e8f0;
+            --border-light: #f1f5f9;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        
+        .back-link {
+            position: absolute;
+            top: 0;
+            left: 0;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.2s ease;
+        }
+        
+        .back-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(-5px);
+        }
+        
+        .main-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.125rem;
+        }
+        
+        /* Auth Section */
+        .auth-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .auth-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+        
+        .auth-section p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+        
+        .auth-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.875rem 2rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .auth-btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .auth-btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .auth-btn-danger {
+            background: var(--error);
+            color: white;
+        }
+        
+        .auth-btn-danger:hover {
+            background: #b91c1c;
+            transform: translateY(-2px);
+        }
+        
+        /* Generator Section */
+        .generator-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .input-group label {
+            display: block;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        .topic-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--border);
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            background: white;
+            color: var(--text-primary);
+        }
+        
+        .topic-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+        
+        .topic-input::placeholder {
+            color: var(--text-muted);
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        .btn-secondary:hover:not(:disabled) {
+            background: #d97706;
+            transform: translateY(-2px);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        /* Tweet Display */
+        .tweet-display {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: none;
+        }
+        
+        .tweet-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+        
+        .tweet-avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .tweet-user-info {
+            flex: 1;
+        }
+        
+        .tweet-user {
+            font-weight: 700;
+            color: var(--text-primary);
+            font-size: 1.125rem;
+        }
+        
+        .tweet-handle {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        
+        .tweet-content {
+            font-size: 1.125rem;
+            line-height: 1.6;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 0.75rem;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .tweet-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+        
+        .tweet-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .tweet-btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .tweet-btn-primary:hover:not(:disabled) {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .tweet-btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+        
+        .tweet-btn-secondary:hover:not(:disabled) {
+            background: var(--border);
+            transform: translateY(-2px);
+        }
+        
+        .tweet-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        /* History Section */
+        .history-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: none;
+        }
+        
+        .history-title {
+            color: var(--text-primary);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            font-size: 1.125rem;
+        }
+        
+        .history-item {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 0.75rem;
+            border-left: 3px solid var(--accent);
+        }
+        
+        .history-item strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        
+        .feedback-text {
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-top: 0.5rem;
+            padding-left: 1rem;
+            border-left: 2px solid var(--primary);
+            font-size: 0.875rem;
+        }
+        
+        /* Messages */
+        .message {
+            text-align: center;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            font-weight: 600;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .success {
+            background: #f0fdf4;
+            border: 2px solid #059669;
+            color: #059669;
+            box-shadow: 0 4px 6px -1px rgba(5, 150, 105, 0.1);
+        }
+        
+        .error {
+            background: rgba(220, 38, 38, 0.1);
+            border: 1px solid var(--error);
+            color: var(--error);
+        }
+        
+        .loading {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        /* Loading Animation */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .main-title {
+                font-size: 2rem;
+            }
+            
+            .back-link {
+                position: relative;
+                margin-bottom: 1rem;
+                width: fit-content;
+            }
+            
+            .tweet-actions {
+                grid-template-columns: 1fr;
+            }
+            
+            .tweet-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.5rem;
+            }
+        }
+        
+        /* Animations */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .slide-in {
+            animation: slideIn 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="/" class="back-link">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"/>
+                </svg>
+                Back to Home
+            </a>
+            <h1 class="main-title">TweetSmith Generator</h1>
+            <p class="subtitle">Create viral tweets with AI-powered intelligence</p>
+        </div>
+        
+        <!-- Authentication Section -->
+        <div id="authSection" class="auth-section" style="display:none;">
+            <h3>🔐 Connect Your X Account</h3>
+            <p>Link your X account to post tweets directly from TweetSmith</p>
+            <a href="/login" class="auth-btn auth-btn-primary">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
+                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+                </svg>
+                Connect X Account
+            </a>
+        </div>
+        
+        <div id="logoutSection" class="auth-section" style="display:none;">
+            <h3>✅ Connected to X</h3>
+            <p>You're ready to create and post viral tweets!</p>
+            <a href="/logout" class="auth-btn auth-btn-danger">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clip-rule="evenodd"/>
+                </svg>
+                Disconnect
+            </a>
+        </div>
+        
+        <!-- Tweet Generator Section -->
+        <div class="generator-section">
+            <div class="input-group">
+                <label for="topic">What would you like to tweet about?</label>
+                <input type="text" id="topic" class="topic-input" placeholder="e.g., Coffee addiction, Monday motivation, Tech trends...">
+            </div>
+            
+            <button id="generateBtn" class="btn btn-primary">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.293l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd"/>
+                </svg>
+                Generate Viral Tweet
+            </button>
+            
+            <button id="newTopicBtn" class="btn btn-secondary" style="display:none;">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/>
+                </svg>
+                Try New Topic
+            </button>
+        </div>
+        
+        <!-- Tweet Display -->
+        <div id="tweetBox" class="tweet-display">
+            <div class="tweet-header">
+                <div class="tweet-avatar">👤</div>
+                <div class="tweet-user-info">
+                    <div class="tweet-user">Your Tweet</div>
+                    <div class="tweet-handle">@yourhandle</div>
+                </div>
+            </div>
+            <div class="tweet-content" id="tweetContent"></div>
+            <div class="tweet-actions">
+                <button id="postBtn" class="tweet-btn tweet-btn-primary">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"/>
+                    </svg>
+                    Post to X
+                </button>
+                <button id="copyBtn" class="tweet-btn tweet-btn-secondary">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z"/>
+                        <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z"/>
+                    </svg>
+                    Copy
+                </button>
+                <button id="regenerateBtn" class="tweet-btn tweet-btn-secondary">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/>
+                    </svg>
+                    Regenerate
+                </button>
+            </div>
+        </div>
+        
+        <!-- History Section -->
+        <div id="historyBox" class="history-section"></div>
+        
+        <!-- Messages -->
+        <div id="resultMsg"></div>
+    </div>
+    
+    <script>
+        const generateBtn = document.getElementById('generateBtn');
+        const newTopicBtn = document.getElementById('newTopicBtn');
+        const tweetBox = document.getElementById('tweetBox');
+        const tweetContent = document.getElementById('tweetContent');
+        const historyBox = document.getElementById('historyBox');
+        const postBtn = document.getElementById('postBtn');
+        const copyBtn = document.getElementById('copyBtn');
+        const regenerateBtn = document.getElementById('regenerateBtn');
+        const resultMsg = document.getElementById('resultMsg');
+        const authSection = document.getElementById('authSection');
+        const logoutSection = document.getElementById('logoutSection');
+        const topicInput = document.getElementById('topic');
+        
+        let currentTweet = '';
+        let tweetHistory = [];
+        let feedbackHistory = [];
+        let isLoggedIn = false;
+        let currentTopic = '';
+
+        // Random topics for inspiration
+        const randomTopics = [
+            "Coffee addiction",
+            "Monday motivation", 
+            "Tech trends",
+            "Work from home",
+            "Social media",
+            "Fitness goals",
+            "Food delivery",
+            "Online shopping",
+            "Pet problems",
+            "Weather complaints",
+            "Movie reviews",
+            "Gaming life",
+            "Travel adventures",
+            "Cooking disasters",
+            "Traffic jams"
+        ];
+
+        function getRandomTopic() {
+            return randomTopics[Math.floor(Math.random() * randomTopics.length)];
+        }
+
+        function showMessage(text, type) {
+            resultMsg.textContent = text;
+            resultMsg.className = `message ${type}`;
+        }
+
+        function clearMessage() {
+            resultMsg.textContent = '';
+            resultMsg.className = '';
+        }
+
+        function setLoadingState(button, isLoading, loadingText = 'Loading...') {
+            if (isLoading) {
+                button.disabled = true;
+                button.innerHTML = `<span class="loading-spinner"></span> ${loadingText}`;
+            } else {
+                button.disabled = false;
+                // Reset button content based on button type
+                if (button === generateBtn) {
+                    generateBtn.innerHTML = `
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.293l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd"/>
+                        </svg>
+                        Generate Viral Tweet
+                    `;
+                } else if (button === postBtn) {
+                    postBtn.innerHTML = `
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"/>
+                        </svg>
+                        Post to X
+                    `;
+                }
+            }
+        }
+
+        // Check login status on page load
+        async function checkLoginStatus() {
+            try {
+                const res = await fetch('/check-auth', { method: 'GET' });
+                const data = await res.json();
+                isLoggedIn = data.authenticated;
+                
+                if (isLoggedIn) {
+                    authSection.style.display = 'none';
+                    logoutSection.style.display = 'block';
+                } else {
+                    authSection.style.display = 'block';
+                    logoutSection.style.display = 'none';
+                }
+            } catch (err) {
+                console.log('Could not check auth status');
+            }
+        }
+
+        checkLoginStatus();
+
+        generateBtn.onclick = async function() {
+            const topic = topicInput.value.trim();
+            if (!topic) {
+                showMessage('Please enter a topic to generate your viral tweet!', 'error');
+                return;
+            }
+            
+            currentTopic = topic;
+            await generateTweet(topic);
+        };
+
+        newTopicBtn.onclick = function() {
+            const randomTopic = getRandomTopic();
+            topicInput.value = randomTopic;
+            currentTopic = randomTopic;
+            generateTweet(randomTopic);
+        };
+
+        async function generateTweet(topic) {
+            tweetBox.style.display = 'none';
+            postBtn.style.display = 'none';
+            historyBox.style.display = 'none';
+            clearMessage();
+            
+            setLoadingState(generateBtn, true, 'Generating...');
+            
+            try {
+                const res = await fetch('/generate-tweet', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ topic })
+                });
+                const data = await res.json();
+                
+                if (data.tweet) {
+                    currentTweet = data.tweet;
+                    tweetHistory = data.tweet_history || [];
+                    feedbackHistory = data.feedback_history || [];
+                    tweetContent.textContent = data.tweet;
+                    
+                    // Show tweet with animation
+                    tweetBox.style.display = 'block';
+                    tweetBox.classList.add('slide-in');
+                    
+                    // Show history if available
+                    if (tweetHistory.length > 1) {
+                        let histHtml = '<div class="history-title">📈 Generation History</div>';
+                        for (let i = 0; i < tweetHistory.length; i++) {
+                            histHtml += `<div class="history-item">
+                                <strong>Version ${i+1}:</strong> ${tweetHistory[i]}
+                                ${feedbackHistory[i] ? `<div class="feedback-text">💡 ${feedbackHistory[i]}</div>` : ''}
+                            </div>`;
+                        }
+                        historyBox.innerHTML = histHtml;
+                        historyBox.style.display = 'block';
+                        historyBox.classList.add('slide-in');
+                    }
+                    
+                    // Show post button if logged in
+                    if (isLoggedIn) {
+                        postBtn.style.display = 'inline-flex';
+                    } else {
+                        showMessage('Connect your X account to post this tweet!', 'error');
+                    }
+                    
+                    // Show new topic button
+                    newTopicBtn.style.display = 'block';
+                    
+                } else {
+                    showMessage(data.error || 'Failed to generate tweet.', 'error');
+                }
+            } catch (err) {
+                showMessage('Error connecting to backend.', 'error');
+            }
+            
+            setLoadingState(generateBtn, false);
+        }
+
+        postBtn.onclick = async function() {
+            if (!isLoggedIn) {
+                showMessage('Please connect your X account first.', 'error');
+                return;
+            }
+            
+            clearMessage();
+            setLoadingState(postBtn, true, 'Posting...');
+            
+            try {
+                const res = await fetch('/post-tweet', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ tweet: currentTweet })
+                });
+                const data = await res.json();
+                
+                if (data.success) {
+                    showMessage(`🚀 Tweet posted successfully! ID: ${data.tweet_id}`, 'success');
+                } else {
+                    showMessage(data.error || 'Failed to post tweet.', 'error');
+                }
+            } catch (err) {
+                showMessage('Error connecting to backend.', 'error');
+            }
+            
+            setLoadingState(postBtn, false);
+        };
+
+        copyBtn.onclick = function() {
+            navigator.clipboard.writeText(currentTweet).then(() => {
+                showMessage('📋 Tweet copied to clipboard!', 'success');
+            }).catch(() => {
+                showMessage('Failed to copy tweet.', 'error');
+            });
+        };
+
+        regenerateBtn.onclick = function() {
+            if (currentTopic) {
+                generateTweet(currentTopic);
+            }
+        };
+
+        // Add some interactive effects
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add focus effects to input
+            topicInput.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'scale(1.02)';
+            });
+            
+            topicInput.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'scale(1)';
+            });
+            
+            // Add click effects to buttons
+            const buttons = document.querySelectorAll('.btn, .tweet-btn');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (!this.disabled) {
+                        this.style.transform = 'scale(0.98)';
+                        setTimeout(() => {
+                            this.style.transform = '';
+                        }, 150);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,41 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.thanos/
+.env
+.uv.lock
+
+.pyproject.toml
+
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+.venv/
+env/
+venv/
+
+# Environment variables
+.env
+test_oauth.py
+eval_results/
+
+
+# Python version file (optional, depends on your team setup)
+.python-version
+
+# Lock files (optional, if using poetry or uv locally only)
+uv.lock
+
+# OS-specific
+.DS_Store
+Thumbs.db
+eval_results/
