@@ -5,3 +5,4 @@ langchain-groq
 python-dotenv
 tweepy
 requests
+pytest

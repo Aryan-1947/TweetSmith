@@ -139,7 +139,7 @@ The pipeline also cleans model output (intro lines, wrapping quotes, trailing ha
 Run the automated tests (no API keys needed, the AI calls are faked):
 
 ```
-pip install -r requirements-dev.txt
+pip install -r requirements.txt
 pytest
 ```
 
@@ -184,7 +184,6 @@ The application consists of:
 - `style_examples.txt` - Optional example tweets for the AI
 - `tests/` and `conftest.py` - Automated tests
 - `requirements.txt` - Python dependencies
-- `requirements-dev.txt` - Test dependencies
 
 ## Troubleshooting
 
