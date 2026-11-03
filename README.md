@@ -182,7 +182,7 @@ The application consists of:
 - `index.html` - Landing page
 - `evaluate.py` - Benchmark script
 - `style_examples.txt` - Optional example tweets for the AI
-- `test_*.py` and `conftest.py` - Automated tests
+- `tests/` and `conftest.py` - Automated tests
 - `requirements.txt` - Python dependencies
 - `requirements-dev.txt` - Test dependencies
 
